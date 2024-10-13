@@ -1,6 +1,12 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+class CommentToLongException extends Exception {
+    public CommentToLongException(String message) {
+        super(message);
+    }
+}
+
 public class CustomerFeedbackSystem {
     public static void main(String[] args) {
 
@@ -21,33 +27,36 @@ public class CustomerFeedbackSystem {
 
             switch (choice) {
                 case 1:
-                    if (feedbackCounter < feedback.length) {
-                        try {
-                            while (feedbackRating[feedbackCounter] < 1 || feedbackRating[feedbackCounter] > 5) {
-                                System.out.println("Enter rating only from 1-5");
+                        if (feedbackCounter < feedback.length) {
+                            try {
+                                while (feedbackRating[feedbackCounter] < 1 || feedbackRating[feedbackCounter] > 5) {
+                                    System.out.println("Enter rating only from 1-5");
+                                    feedbackRating[feedbackCounter] = scanner.nextInt();
+                                }
+                                if (feedbackRating[feedbackCounter] > 1 || feedbackRating[feedbackCounter] < 5) {
+                                    System.out.println("Rating added");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Only numbers from 1-5 can be entered");
+                                scanner.nextLine();
                                 feedbackRating[feedbackCounter] = scanner.nextInt();
-                            } if (feedbackRating[feedbackCounter] > 1 || feedbackRating[feedbackCounter] < 5) {
-                                System.out.println("Rating added");
                             }
                             scanner.nextLine();
-
-                        } catch (InputMismatchException e) {
-                            System.out.println("Only numbers can be entered");
-                            break;
+                            System.out.println("Enter Feedback");
+                            feedback[feedbackCounter] = scanner.nextLine();
+                            feedbackCounter++;
+                            System.out.println("Feedback Added");
+                        } else {
+                            System.out.println("Feedback limit of 5 is reached");
                         }
-                        System.out.println("Enter Feedback");
-                        feedback[feedbackCounter] = scanner.nextLine();
-                        feedbackCounter++;
-                        System.out.println("Feedback Added");
 
-                   } else {
-                        System.out.println("Feedback limit of 5 is reached");
-                   }
-                    break;
                 case 2:
                     System.out.println("Show Feedbacks");
                     for (int i = 0; i < feedbackCounter; i++) {
                         System.out.println("Feedback rating: " + feedbackRating[i]+ ", feedback comment: " + (feedback[i]));
+                    }
+                    if (feedbackCounter < feedback.length) {
+                        System.out.println("No feedbacks added");
                     }
                     break;
 
