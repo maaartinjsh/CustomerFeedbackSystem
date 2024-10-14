@@ -8,7 +8,11 @@ class CommentToLongException extends Exception {
 }
 
 public class CustomerFeedbackSystem {
-    public static void main(String[] args) {
+
+    public static int feedbackWordCounter(String feedback) {
+        return feedback.trim().split("\\s+").length;
+    }
+    public static void main(String[] args) throws CommentTooLongException {
 
         String[] feedback = new String[5];
         int[] feedbackRating = new int[5];
@@ -33,29 +37,40 @@ public class CustomerFeedbackSystem {
                                 System.out.println("Enter rating only from 1-5");
                                 feedbackRating[feedbackCounter] = scanner.nextInt();
                             }
-                            if (feedbackRating[feedbackCounter] > 1 || feedbackRating[feedbackCounter] < 5) {
-                                System.out.println("Rating added");
-                            }
                         } catch (InputMismatchException e) {
                             System.out.println("Only numbers from 1-5 can be entered");
                             scanner.nextLine();
                             feedbackRating[feedbackCounter] = scanner.nextInt();
                         }
-                            scanner.nextLine();
-                            System.out.println("Enter Feedback");
-                            feedback[feedbackCounter] = scanner.nextLine();
-                            feedbackCounter++;
+                        scanner.nextLine();
+                        System.out.println("Enter Feedback");
+                        String userFeedback = scanner.nextLine();
+                        int countedWords = feedbackWordCounter(userFeedback);
+                        try {
+                            if (countedWords > 5) {
+                                throw new CommentTooLongException(" ");
+                            } else if (countedWords == 1) {
+                                System.out.println("Comment cannot be empty.");
+                                scanner.nextLine();
+                            }  else {
+                                feedback[feedbackCounter] = userFeedback;
+                                feedbackCounter++;
+                            }
                             System.out.println("Feedback Added");
+                        } catch (CommentTooLongException e) {
+                            System.out.println("Comment cannot exceed 5 words. PLease try again.");
+                        }
                     } else {
                         System.out.println("Feedback limit of 5 is reached");
                     }
+                    break;
 
                 case 2:
                     System.out.println("Show Feedbacks");
                     for (int i = 0; i < feedbackCounter; i++) {
                         System.out.println("Feedback rating: " + feedbackRating[i]+ ", feedback comment: " + (feedback[i]));
                     }
-                    if (feedbackCounter < feedback.length) {
+                    if (feedbackCounter == 0) {
                         System.out.println("No feedbacks added");
                     }
                     break;
@@ -65,7 +80,7 @@ public class CustomerFeedbackSystem {
                     break;
 
                 default:
-                    System.out.println("Invalid choice");
+                    System.out.println("Invalid choice, only  1-3 options are available");
                     break;
             }
         } while (choice != 3);
