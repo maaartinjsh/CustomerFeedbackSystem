@@ -1,19 +1,17 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-class CommentToLongException extends Exception {
-    public CommentToLongException(String message) {
+class CommentTooLongException extends Exception {
+    public CommentTooLongException(String message) {
         super(message);
     }
 }
 
 public class CustomerFeedbackSystem {
-
     public static int feedbackWordCounter(String feedback) {
         return feedback.trim().split("\\s+").length;
     }
     public static void main(String[] args) throws CommentTooLongException {
-
         String[] feedback = new String[5];
         int[] feedbackRating = new int[5];
         int feedbackCounter = 0;
@@ -25,6 +23,7 @@ public class CustomerFeedbackSystem {
             System.out.println("1. Add Feedback");
             System.out.println("2. Show Feedbacks");
             System.out.println("3. Exit");
+            System.out.println("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -34,7 +33,7 @@ public class CustomerFeedbackSystem {
                     if (feedbackCounter < feedback.length) {
                         try {
                             while (feedbackRating[feedbackCounter] < 1 || feedbackRating[feedbackCounter] > 5) {
-                                System.out.println("Enter rating only from 1-5");
+                                System.out.println("Enter rating from 1-5");
                                 feedbackRating[feedbackCounter] = scanner.nextInt();
                             }
                         } catch (InputMismatchException e) {
@@ -48,10 +47,7 @@ public class CustomerFeedbackSystem {
                         int countedWords = feedbackWordCounter(userFeedback);
                         try {
                             if (countedWords > 5) {
-                                throw new CommentTooLongException(" ");
-                            } else if (countedWords == 1) {
-                                System.out.println("Comment cannot be empty.");
-                                scanner.nextLine();
+                                throw new CommentTooLongException("");
                             }  else {
                                 feedback[feedbackCounter] = userFeedback;
                                 feedbackCounter++;
